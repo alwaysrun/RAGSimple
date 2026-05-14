@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+.venv/
+env/
+venv/
+ENV/
+
+# Configuration
+.env
+
+# IDEs
+.vscode/
+.idea/
+.agents/
+.trae/
+
+# customer
+/dist/
+/build/

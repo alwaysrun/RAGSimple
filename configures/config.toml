@@ -1,0 +1,16 @@
+[backend]
+host = "0.0.0.0"
+port = 8000
+db_path = "data/DB"
+
+[rag]
+chunk_size = 1000
+chunk_overlap = 200
+semantic_threshold = 0.5
+
+[models]
+llm_type = "openai"
+llm_model = "glm-5"
+llm_base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
+embedding_type = "huggingface"
+embedding_model = "BAAI/bge-small-zh-v1.5"
