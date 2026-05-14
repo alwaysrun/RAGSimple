@@ -19,5 +19,5 @@ ENV/
 .trae/
 
 # customer
-/dist/
+/tests/
 /build/
