@@ -20,4 +20,5 @@ ENV/
 
 # customer
 /tests/
-/build/
+/data/
+**/superpowers/
