@@ -12,9 +12,13 @@ CONFIG_PATH = os.path.join(CONFIG_DIR, "config.toml")
 load_dotenv(ENV_PATH)
 
 class BackendSettings(BaseModel):
-    host: str = "0.0.0.0"
+    host: str = "127.0.0.1"
     port: int = 8000
     db_path: str = "data/DB"
+
+class FrontendSettings(BaseModel):
+    host: str = "127.0.0.1"
+    port: int = 8501
 
 class RAGSettings(BaseModel):
     chunk_size: int = 1000
@@ -27,6 +31,7 @@ class ModelSettings(BaseModel):
     llm_base_url: str = "https://dashscope.aliyuncs.com/compatible-mode/v1"
     embedding_type: str = "huggingface"
     embedding_model: str = "BAAI/bge-small-zh-v1.5"
+    embedding_cache_dir: str = "data/models"
 
 class Settings:
     def __init__(self):
@@ -37,6 +42,7 @@ class Settings:
             config = toml.load(f)
             
         self.backend = BackendSettings(**config.get("backend", {}))
+        self.frontend = FrontendSettings(**config.get("frontend", {}))
         self.rag = RAGSettings(**config.get("rag", {}))
         self.models = ModelSettings(**config.get("models", {}))
 

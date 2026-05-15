@@ -1,14 +1,22 @@
+print("📚 Loading heavy RAG dependencies...")
 import os
+
+print("  ├─ Loading LangChain retrievers & storage...")
 from langchain.retrievers import ParentDocumentRetriever
 from langchain.storage import LocalFileStore
-from langchain_community.vectorstores import Chroma
 from langchain.storage._lc_store import create_kv_docstore
+
+print("  ├─ Loading Vector Store (ChromaDB)...")
+from langchain_chroma import Chroma
+
+print("  └─ Loading Internal Modules...")
 from app.backend.models.factory import ModelFactory
 from app.backend.core.config import settings
 from app.backend.core.ingestion import get_parent_child_chunks
 
 class RAGService:
     def __init__(self):
+        print("🛠️  Initializing RAG Service...")
         self.embeddings = ModelFactory.get_embeddings()
         
         # Setup paths

@@ -1,3 +1,4 @@
+print("🔥 Backend process started, loading components...")
 import uvicorn
 from fastapi import FastAPI
 from app.backend.api.routes import router

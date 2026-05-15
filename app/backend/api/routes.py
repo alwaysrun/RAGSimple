@@ -1,3 +1,4 @@
+print("🛣️  Setting up API routes...")
 from fastapi import APIRouter, File, UploadFile, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Any
@@ -5,6 +6,12 @@ from app.backend.core.rag_service import RAGService
 from app.backend.core.config import settings
 from langchain_core.documents import Document
 import io
+import logging
+import traceback
+
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 rag_service = RAGService()
@@ -27,19 +34,32 @@ async def ingest_files(files: List[UploadFile] = File(...)):
                 text = content.decode("utf-8")
                 docs.append(Document(page_content=text, metadata={"source": file.filename}))
             elif file.filename.endswith(".pdf"):
-                # PDF handling requires pypdf or similar, simplified for now
-                import pypdf
-                pdf_reader = pypdf.PdfReader(io.BytesIO(content))
-                text = ""
-                for page in pdf_reader.pages:
-                    text += page.extract_text()
-                docs.append(Document(page_content=text, metadata={"source": file.filename}))
+                try:
+                    import pypdf
+                    pdf_reader = pypdf.PdfReader(io.BytesIO(content))
+                    text = ""
+                    for page in pdf_reader.pages:
+                        page_text = page.extract_text()
+                        if page_text:
+                            text += page_text
+                    docs.append(Document(page_content=text, metadata={"source": file.filename}))
+                except Exception as pdf_err:
+                    logger.error(f"Error parsing PDF {file.filename}: {pdf_err}")
+                    logger.error(traceback.format_exc())
+                    raise HTTPException(status_code=400, detail=f"Error parsing PDF {file.filename}: {str(pdf_err)}")
             else:
                 raise HTTPException(status_code=400, detail=f"Unsupported file type: {file.filename}")
         
+        if not docs:
+            raise HTTPException(status_code=400, detail="No extractable text found in the provided files.")
+            
         rag_service.ingest(docs)
         return {"status": "success", "indexed_files": [f.filename for f in files]}
+    except HTTPException as he:
+        raise he
     except Exception as e:
+        logger.error(f"Ingestion failed: {str(e)}")
+        logger.error(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.post("/query", response_model=QueryResponse)

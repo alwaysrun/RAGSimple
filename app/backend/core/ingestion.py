@@ -1,4 +1,3 @@
-from langchain_experimental.text_splitter import SemanticChunker
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from app.backend.models.factory import ModelFactory
 from app.backend.core.config import settings
@@ -7,6 +6,7 @@ def process_documents(docs):
     """
     Processes documents using Semantic Chunking.
     """
+    from langchain_experimental.text_splitter import SemanticChunker
     embeddings = ModelFactory.get_embeddings()
     # Semantic chunking for better context
     semantic_splitter = SemanticChunker(

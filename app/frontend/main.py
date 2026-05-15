@@ -84,13 +84,13 @@ if prompt := st.chat_input("Ask about your documents..."):
             except Exception as e:
                 st.error(f"Query failed: {e}")
 
-if __name__ == "__main__":
-    # This allows the script to be run directly via 'python app/frontend/main.py'
-    # but still works with 'streamlit run app/frontend/main.py'
-    import subprocess
-    import sys
+# if __name__ == "__main__":
+#     # This allows the script to be run directly via 'python app/frontend/main.py'
+#     # but still works with 'streamlit run app/frontend/main.py'
+#     import subprocess
+#     import sys
     
-    # Get the absolute path of the current file
-    file_path = os.path.abspath(__file__)
-    # Run streamlit
-    subprocess.run([sys.executable, "-m", "streamlit", "run", file_path])
+#     # Get the absolute path of the current file
+#     file_path = os.path.abspath(__file__)
+#     # Run streamlit
+#     subprocess.run([sys.executable, "-m", "streamlit", "run", file_path])

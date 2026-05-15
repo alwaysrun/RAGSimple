@@ -23,7 +23,7 @@ def run_backend():
     print(f"🚀 Starting RAGSimple Backend...")
     print(f"📍 Host: {settings.backend.host}")
     print(f"📍 Port: {settings.backend.port}")
-    print(f"📍 Config: {settings.models.llm_model} / {settings.models.embedding_model}")
+    print(f"📍 LLM: {settings.models.llm_model}")
     
     # We use the string import format to enable uvicorn's reload feature
     uvicorn.run(
@@ -37,7 +37,11 @@ def run_frontend():
     """
     Starts the Streamlit frontend.
     """
+    from app.backend.core.config import settings
+    
     print("🎨 Starting RAGSimple Frontend...")
+    print(f"📍 Host: {settings.frontend.host}")
+    print(f"📍 Port: {settings.frontend.port}")
     
     # Path to the frontend main file
     frontend_path = os.path.join(ROOT_DIR, "app", "frontend", "main.py")
@@ -47,8 +51,13 @@ def run_frontend():
         sys.exit(1)
         
     # Command to run streamlit
-    # We use sys.executable to ensure we use the same python environment
-    cmd = [sys.executable, "-m", "streamlit", "run", frontend_path]
+    # Configuration is pulled from the TOML file via settings
+    cmd = [
+        sys.executable, "-m", "streamlit", "run", frontend_path,
+        "--server.address", settings.frontend.host,
+        "--server.port", str(settings.frontend.port),
+        "--browser.gatherUsageStats", "false"
+    ]
     
     try:
         subprocess.run(cmd, check=True)
