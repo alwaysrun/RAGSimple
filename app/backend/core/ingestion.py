@@ -5,10 +5,10 @@ from app.backend.core.config import settings
 def process_documents(docs):
     """
     Processes documents using Semantic Chunking.
+    Splits documents into semantic chunks for better context preservation.
     """
     from langchain_experimental.text_splitter import SemanticChunker
     embeddings = ModelFactory.get_embeddings()
-    # Semantic chunking for better context
     semantic_splitter = SemanticChunker(
         embeddings, 
         breakpoint_threshold_type="percentile",
@@ -20,14 +20,18 @@ def process_documents(docs):
 def get_parent_child_chunks():
     """
     Returns the splitters for Parent-Child indexing.
+    Uses config values from settings.rag for chunk parameters.
+    Overlap is calculated as: chunk_size * chunk_overlap_ratio
     """
+    ratio = settings.rag.chunk_overlap_ratio
+    
     parent_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=2000, 
-        chunk_overlap=200
+        chunk_size=settings.rag.parent_chunk_size,
+        chunk_overlap=int(settings.rag.parent_chunk_size * ratio)
     )
     child_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=400, 
-        chunk_overlap=50
+        chunk_size=settings.rag.child_chunk_size,
+        chunk_overlap=int(settings.rag.child_chunk_size * ratio)
     )
     
     return parent_splitter, child_splitter

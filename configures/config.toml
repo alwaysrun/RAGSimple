@@ -8,8 +8,9 @@ host = "127.0.0.1"
 port = 8501
 
 [rag]
-chunk_size = 1000
-chunk_overlap = 200
+parent_chunk_size = 2000
+child_chunk_size = 400
+chunk_overlap_ratio = 0.1
 semantic_threshold = 0.5
 
 [models]

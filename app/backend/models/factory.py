@@ -17,8 +17,8 @@ class ModelFactory:
                 
             return ChatOpenAI(
                 model=settings.models.llm_model,
-                openai_api_key=api_key,
-                openai_api_base=settings.models.llm_base_url
+                api_key=api_key,
+                base_url=settings.models.llm_base_url
             )
         raise ValueError(f"Unsupported LLM type: {settings.models.llm_type}")
 

@@ -34,13 +34,26 @@ with st.sidebar:
 
     st.divider()
     
+    if "confirm_reset" not in st.session_state:
+        st.session_state.confirm_reset = False
+    
     if st.button("🗑️ Reset Database"):
-        if st.confirm("Are you sure you want to clear the vector store?"):
-            try:
-                client.reset()
-                st.success("Database cleared.")
-            except Exception as e:
-                st.error(f"Reset failed: {e}")
+        st.session_state.confirm_reset = True
+    
+    if st.session_state.confirm_reset:
+        st.warning("⚠️ Are you sure you want to clear the vector store?")
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("✅ Yes, Reset"):
+                try:
+                    client.reset()
+                    st.success("Database cleared.")
+                    st.session_state.confirm_reset = False
+                except Exception as e:
+                    st.error(f"Reset failed: {e}")
+        with col2:
+            if st.button("❌ Cancel"):
+                st.session_state.confirm_reset = False
 
 # Main Chat Area
 st.title("💬 RAGSimple Chat")
